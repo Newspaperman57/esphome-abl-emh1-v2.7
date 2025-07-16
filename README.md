@@ -1,8 +1,7 @@
 # esphome-abl-emh1
-Esphome component for communication with ABL Wallbox eMH1
+Esphome component for communication with ABL Wallbox eMH1 with the (older?) ABL SURSUM EVCC v2.7 controller
 
-This is a very basic EspHome component for use with the
-ABL eMH1 wallbox.
+This is a fork of the original project which uses a slightly different protocol: https://github.com/jrv/esphome-abl-emh1
 
 It reads the current on 3 phases and allows you to set the max current.
 There is also a switch to enable/disable the charger.
@@ -27,6 +26,5 @@ Using this component requires you to connect consumer electronics
 inside your ABL eMH1 Wallbox. There's also ~380V in that box, so
 please make sure you know what your doing. 
 
-This code was tested by trail and error, it might blow a fuse or two.
 Connecting this to your electricity network and your car is your own
 responsibility.
