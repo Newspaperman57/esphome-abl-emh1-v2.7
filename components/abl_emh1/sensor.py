@@ -20,68 +20,31 @@ from . import CONF_ABL_EMH1_ID, ABLeMH1
 
 DEPENDENCIES = ["abl_emh1"]
 
-CONF_ENERGY_TODAY = "energy_today"
-CONF_ENERGY_TOTAL = "energy_total"
-CONF_L1_CURRENT = "l1_current"
-CONF_L2_CURRENT = "l2_current"
-CONF_L3_CURRENT = "l3_current"
+CONF_MODE = "mode"
+CONF_CURRENT = "current"
 CONF_MAX_CURRENT = "max_current"
-CONF_OUTLET_STATE = "outlet_state"
-CONF_EN1_STATUS = "en1_status"
-CONF_EN2_STATUS = "en2_status"
-CONF_DUTY_CYCLE_REDUCED = "duty_cycle_reduced"
-CONF_UCP_STATUS = "ucp_status"
-
-UNIT_HOURS = "h"
-UNIT_KILO_WATT_HOURS = "kWh"
+CONF_CHARGING_ENABLED = "charging_enabled"
 
 ICON_MODE = "mdi:information"
 
 SENSORS = [
-    CONF_ENERGY_TODAY,
-    CONF_ENERGY_TOTAL,
-		CONF_L1_CURRENT,
-		CONF_L2_CURRENT,
-		CONF_L3_CURRENT,
-		CONF_MAX_CURRENT,
-    CONF_OUTLET_STATE,
-		CONF_EN1_STATUS,
-		CONF_EN2_STATUS,
-		CONF_DUTY_CYCLE_REDUCED,
-		CONF_UCP_STATUS
+    CONF_MODE,
+	CONF_CURRENT,
+    CONF_MAX_CURRENT,
+    CONF_CHARGING_ENABLED,
 ]
 
 # pylint: disable=too-many-function-args
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(CONF_ABL_EMH1_ID): cv.use_id(ABLeMH1),
-        cv.Optional(CONF_ENERGY_TODAY): sensor.sensor_schema(
-            unit_of_measurement=UNIT_KILO_WATT_HOURS,
-            icon=ICON_COUNTER,
-            accuracy_decimals=1,
-            device_class=DEVICE_CLASS_ENERGY,
-            state_class=STATE_CLASS_TOTAL_INCREASING,
+        cv.Optional(CONF_MODE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_EMPTY,
+            icon=ICON_MODE,
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_EMPTY,
         ),
-        cv.Optional(CONF_ENERGY_TOTAL): sensor.sensor_schema(
-            unit_of_measurement=UNIT_KILO_WATT_HOURS,
-            icon=ICON_COUNTER,
-            accuracy_decimals=1,
-            device_class=DEVICE_CLASS_ENERGY,
-            state_class=STATE_CLASS_TOTAL_INCREASING,
-        ),
-        cv.Optional(CONF_L1_CURRENT): sensor.sensor_schema(
-            unit_of_measurement=UNIT_AMPERE,
-            accuracy_decimals=1,
-            device_class=DEVICE_CLASS_CURRENT,
-            state_class=STATE_CLASS_MEASUREMENT,
-        ),
-        cv.Optional(CONF_L2_CURRENT): sensor.sensor_schema(
-            unit_of_measurement=UNIT_AMPERE,
-            accuracy_decimals=1,
-            device_class=DEVICE_CLASS_CURRENT,
-            state_class=STATE_CLASS_MEASUREMENT,
-        ),
-        cv.Optional(CONF_L3_CURRENT): sensor.sensor_schema(
+        cv.Optional(CONF_CURRENT): sensor.sensor_schema(
             unit_of_measurement=UNIT_AMPERE,
             accuracy_decimals=1,
             device_class=DEVICE_CLASS_CURRENT,
@@ -93,31 +56,7 @@ CONFIG_SCHEMA = cv.Schema(
             device_class=DEVICE_CLASS_CURRENT,
             state_class=STATE_CLASS_MEASUREMENT,
         ),
-        cv.Optional(CONF_OUTLET_STATE): sensor.sensor_schema(
-            unit_of_measurement=UNIT_EMPTY,
-            icon=ICON_MODE,
-            accuracy_decimals=0,
-            device_class=DEVICE_CLASS_EMPTY,
-        ),
-        cv.Optional(CONF_EN1_STATUS): sensor.sensor_schema(
-            unit_of_measurement=UNIT_EMPTY,
-            icon=ICON_MODE,
-            accuracy_decimals=0,
-            device_class=DEVICE_CLASS_EMPTY,
-        ),
-        cv.Optional(CONF_EN2_STATUS): sensor.sensor_schema(
-            unit_of_measurement=UNIT_EMPTY,
-            icon=ICON_MODE,
-            accuracy_decimals=0,
-            device_class=DEVICE_CLASS_EMPTY,
-        ),
-        cv.Optional(CONF_DUTY_CYCLE_REDUCED): sensor.sensor_schema(
-            unit_of_measurement=UNIT_EMPTY,
-            icon=ICON_MODE,
-            accuracy_decimals=0,
-            device_class=DEVICE_CLASS_EMPTY,
-        ),
-        cv.Optional(CONF_UCP_STATUS): sensor.sensor_schema(
+        cv.Optional(CONF_CHARGING_ENABLED): sensor.sensor_schema(
             unit_of_measurement=UNIT_EMPTY,
             icon=ICON_MODE,
             accuracy_decimals=0,

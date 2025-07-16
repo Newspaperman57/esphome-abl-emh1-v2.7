@@ -58,117 +58,58 @@ abl_emh1:
 preferences:
   flash_write_interval: 5min
 
-text_sensor:
-  - platform: abl_emh1
-    mode:
-      name: "Status"
-    serial_number:
-      name: "Serial number"
-      disabled_by_default: true
-  - platform: template
-    name: Chargemode
-    id: chargemode
-    icon: "mdi:car"
-    update_interval: 5s
-    disabled_by_default: true
-    lambda: |-
-      int phaseCnt = 0; 
-      if (id(outlet_state).state == 0xC2) {
-        if (id(l1_current).state > 1.0)
-          phaseCnt++;
-        if (id(l2_current).state > 1.0)
-          phaseCnt++;
-        if (id(l3_current).state > 1.0)
-          phaseCnt++;
-      }
-      std::__cxx11::string result;
-      switch (phaseCnt){
-        case 0: 
-          result = "None";
-          break;
-        case 1:
-          result = "1 Phase";
-          break;
-        default:
-          result = "3 Phase";
-      }
-      return result;
-
 sensor:
-  - platform: abl_emh1
-    l1_current:
-      name: "L1 current"
-      state_class: "measurement"
-      accuracy_decimals: 0
-      id: l1_current
-    l2_current:
-      name: "L2 current"
-      state_class: "measurement"
-      accuracy_decimals: 0
-      id: l2_current
-    l3_current:
-      name: "L3 current"
-      state_class: "measurement"
-      accuracy_decimals: 0
-      id: l3_current
-    max_current:
-      name: "Max current"
-      state_class: "measurement"
-      id: max_current
-      disabled_by_default: true 
-      accuracy_decimals: 0
-    en1_status:
-      name: "EN1 status"
-      disabled_by_default: true 
-    en2_status:
-      name: "EN2 status"
-      disabled_by_default: true 
-    duty_cycle_reduced:
-      name: "Reduced Duty Cycle (max_current)"
-      disabled_by_default: true 
-    ucp_status:
-      name: "Ucp Status <= 10V"
-      disabled_by_default: true 
-    outlet_state:
-      name: "Outlet state"
-      disabled_by_default: true
-      id: outlet_state
   - platform: uptime
     name: Uptime Sensor
     id: abl_uptime
     update_interval: 15s
+  - platform: abl_emh1
+    mode:
+      name: "mode"
+      state_class: "measurement"
+      accuracy_decimals: 0
+      id: mode
+    max_current:
+      name: "Max current"
+      state_class: "measurement"
+      id: max_current
+    charging_enabled:
+      name: "Charging Enabled"
+      state_class: "measurement"
+      id: charging_enabled
+    current:
+      name: "Current-sensor"
+      state_class: "measurement"
+      id: current
+
 
 number:
   - platform: template
-    name: "Max Amps"
+    name: "Current"
     id: set_current
     icon: mdi:arrow-oscillating
     min_value: 3
     max_value: 32
-    step: 1
+    step: 0.1
     optimistic: false
-    lambda: 'return std::lround(id(max_current).state);'
-    update_interval: 1s
+    lambda: 'return id(current).state;'
+    update_interval: 5s
     set_action:
       lambda: |-
-        ESP_LOGD("main", "Sending modbus value = %d", std::lround(x));
-        id(modbus0)->send_current(std::lround(x));
+        ESP_LOGD("main", "Setting current = %d", x);
+        id(modbus0)->set_current(x);
 
 switch:
   - platform: template
     name: "Enable"
     id: enable_switch
     icon: "mdi:power"
-    lambda: 'return (id(outlet_state).state != 0xE0);'
-    turn_off_action: 
+    lambda: 'return id(charging_enabled).state;'
+    turn_off_action:
       - lambda: |-
-          if ((id(abl_uptime).state > 10.0) && (id(outlet_state).state != NAN)) 
-            id(modbus0)->send_enable(0);
-    turn_on_action: 
+          ESP_LOGD("main", "Disabling charging");
+          id(modbus0)->set_charging_enabled(false);
+    turn_on_action:
       - lambda: |-
-          if ((id(abl_uptime).state > 10.0) && (id(outlet_state).state != NAN))
-            id(modbus0)->send_enable(1);
-
- 
-
-          
+          ESP_LOGD("main", "Enabling charging");
+          id(modbus0)->set_charging_enabled(true);

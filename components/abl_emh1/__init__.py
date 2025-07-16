@@ -3,8 +3,8 @@ from esphome.components import emh1_modbus
 import esphome.config_validation as cv
 from esphome.const import CONF_ID
 
-AUTO_LOAD = ["emh1_modbus", "sensor", "text_sensor"]
-CODEOWNERS = ["@jrv"]
+AUTO_LOAD = ["emh1_modbus", "sensor"]
+CODEOWNERS = ["@Newspaperman57"]
 MULTI_CONF = True
 
 CONF_ABL_EMH1_ID = "abl_emh1_id"
@@ -18,7 +18,7 @@ CONFIG_SCHEMA = (
     cv.Schema({cv.GenerateID(): cv.declare_id(ABLeMH1)})
     .extend(cv.polling_component_schema("30s"))
     .extend(
-        emh1_modbus.emh1_modbus_device_schema(0x01)
+        emh1_modbus.emh1_modbus_device_schema(0x00)
     )
 )
 
