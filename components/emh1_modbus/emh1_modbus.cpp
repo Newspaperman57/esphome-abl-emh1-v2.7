@@ -41,6 +41,7 @@ void eMH1Modbus::loop() {
     }
 
     if (this->parse_emh1_modbus_byte(byte)) {
+      ESP_LOGD(TAG, "Got response in %d ms", now - this->timeout_start_);
       this->state_ = CommState::IDLE;
     } else {
       this->rx_buffer.clear();
