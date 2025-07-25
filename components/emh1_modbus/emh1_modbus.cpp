@@ -35,7 +35,6 @@ void eMH1Modbus::loop() {
     this->read_byte(&byte);
 
     if (this->tx_echo_ignore_ > 0) {
-      ESP_LOGD(TAG, "Ignore received byte: %x", byte);
       this->tx_echo_ignore_--;
       continue;
     }
