@@ -2,7 +2,6 @@
 #include "esphome/core/log.h"
 #include "esphome/core/helpers.h"
 #include "esphome.h"
-#include <vector>
 
 namespace esphome {
 namespace emh1_modbus {
@@ -10,17 +9,6 @@ namespace emh1_modbus {
 static const char *const TAG = "emh1_modbus";
 static const char PROTOCOL_STARTBYTE = '!';
 static const char MODULE_ADDRESS = '0';
-
-enum class CommState {
-  IDLE,
-  WAITING_FOR_REPLY
-};
-
-struct Command {
-  char address;
-  std::string function;
-  std::string data;
-};
 
 void eMH1Modbus::setup() {
   if (this->flow_control_pin != nullptr) {

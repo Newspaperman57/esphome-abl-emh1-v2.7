@@ -113,3 +113,13 @@ switch:
       - lambda: |-
           ESP_LOGD("main", "Enabling charging");
           id(modbus0)->set_charging_enabled(true);
+
+button:
+  - platform: template
+    name: Stop charging
+    id: stop_charging
+    on_press:
+      then:
+      - lambda: |-
+          ESP_LOGD("main", "Stopping chargingsession");
+          id(modbus0)->stop_charging();

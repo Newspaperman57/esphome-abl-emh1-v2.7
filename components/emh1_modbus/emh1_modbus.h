@@ -3,8 +3,22 @@
 #include "esphome/core/component.h"
 #include "esphome/components/uart/uart.h"
 
+#include <vector>
+#include <queue>
+
 namespace esphome {
 namespace emh1_modbus {
+
+enum class CommState {
+  IDLE,
+  WAITING_FOR_REPLY
+};
+
+struct Command {
+  char address;
+  std::string function;
+  std::string data;
+};
 
 struct eMH1MessageT {
   uint8_t DeviceId;
@@ -46,6 +60,11 @@ class eMH1Modbus : public uart::UARTDevice, public Component {
  protected:
   void int_to_str(uint16_t val, char out[4]);
 
+  void send_immediate(char address, const char function[2], const char* data, size_t datasize);
+  void queue_command(char address, const char function[2], const char* data, size_t datasize);
+  void queue_command(char address, const char function[2], const char* data);
+  void queue_command(char address, const char function[2]);
+
   bool parse_emh1_modbus_byte(uint8_t byte);
   GPIOPin *flow_control_pin{nullptr};
 
@@ -53,6 +72,12 @@ class eMH1Modbus : public uart::UARTDevice, public Component {
   std::vector<char> rx_buffer;
   uint32_t last_emh1_modbus_byte{0};
   std::vector<eMH1ModbusDevice *> devices;
+
+  Command current_command_;
+  size_t tx_echo_ignore_ = 0;
+  std::queue<Command> command_queue_;
+  CommState state_;
+  uint32_t timeout_start_;
 };
 
 class eMH1ModbusDevice {
