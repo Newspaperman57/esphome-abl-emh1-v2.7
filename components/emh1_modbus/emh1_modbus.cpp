@@ -43,8 +43,6 @@ void eMH1Modbus::loop() {
     if (this->parse_emh1_modbus_byte(byte)) {
       ESP_LOGD(TAG, "Got response in %d ms", now - this->timeout_start_);
       this->state_ = CommState::IDLE;
-    } else {
-      this->rx_buffer.clear();
     }
   }
 
@@ -56,11 +54,12 @@ void eMH1Modbus::loop() {
 }
 
 bool eMH1Modbus::parse_emh1_modbus_byte(uint8_t byte) {
+  // Returns true when a packet was parsed
   size_t at = this->rx_buffer.size();
   this->rx_buffer.push_back(byte);
 
   if (byte != 0x0A)
-    return true;
+    return false;
 
   this->rx_buffer.push_back('\0');
   char *frame = &this->rx_buffer[0];
