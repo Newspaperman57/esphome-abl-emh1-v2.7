@@ -59,9 +59,9 @@ class eMH1Modbus : public uart::UARTDevice, public Component {
   void queue_command(char address, const char function[2], const char* data, size_t datasize);
   void queue_command(char address, const char function[2], const char* data);
   void queue_command(char address, const char function[2]);
+  void int_to_str(uint16_t val, char out[4]);
 
  protected:
-  void int_to_str(uint16_t val, char out[4]);
 
   void send_immediate(char address, const char function[2], const char* data, size_t datasize);
 
