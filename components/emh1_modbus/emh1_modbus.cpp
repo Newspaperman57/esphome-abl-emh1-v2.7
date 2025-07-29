@@ -125,13 +125,6 @@ void eMH1Modbus::set_current(float amps) {
   this->queue_command(MODULE_ADDRESS, "12", pwmstr);
 }
 
-void eMH1Modbus::set_pwm(int pwm) {
-  ESP_LOGW(TAG, "Set PWM: %d", pwm);
-  char pwmstr[4];
-  this->int_to_str(pwm, pwmstr);
-  this->queue_command(MODULE_ADDRESS, "12", pwmstr);
-}
-
 void eMH1Modbus::request_address() {
   ESP_LOGW(TAG, "Get address");
   this->queue_command(MODULE_ADDRESS, "23");
