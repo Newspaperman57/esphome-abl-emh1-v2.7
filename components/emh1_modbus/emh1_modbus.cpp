@@ -118,8 +118,15 @@ void eMH1Modbus::set_current(float amps) {
   ESP_LOGW(TAG, "Set current: %f", amps);
   int pwm = std::round(amps * 100 / 6);
   if(pwm < 80) {
-    pwm = 970; // Charging not allowed
+    pwm = 999; // Charging not allowed
   }
+  char pwmstr[4];
+  this->int_to_str(pwm, pwmstr);
+  this->queue_command(MODULE_ADDRESS, "12", pwmstr);
+}
+
+void eMH1Modbus::set_pwm(int pwm) {
+  ESP_LOGW(TAG, "Set PWM: %d", pwm);
   char pwmstr[4];
   this->int_to_str(pwm, pwmstr);
   this->queue_command(MODULE_ADDRESS, "12", pwmstr);
@@ -205,7 +212,7 @@ void eMH1Modbus::queue_command(char address, const char function[2], const char*
 }
 
 void eMH1Modbus::queue_command(char address, const char function[2], const char* data) {
-  this->queue_command(address, function, data, strlen(data));
+  this->queue_command(address, function, data, 4);
 }
 
 void eMH1Modbus::queue_command(char address, const char function[2]) {
