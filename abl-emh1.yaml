@@ -96,7 +96,7 @@ number:
     update_interval: 5s
     set_action:
       lambda: |-
-        ESP_LOGD("main", "Setting current = %d", x);
+        ESP_LOGD("main", "Setting current = %f", x);
         id(modbus0)->set_current(x);
 
 switch:
