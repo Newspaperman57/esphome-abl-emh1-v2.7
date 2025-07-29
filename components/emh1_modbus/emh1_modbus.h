@@ -51,20 +51,19 @@ class eMH1Modbus : public uart::UARTDevice, public Component {
   void request_mode();
   void request_current();
   void set_current(float amps);
-  void set_pwm(int pwm);
   void request_address();
   void stop_charging();
   void request_max_current();
   void set_charging_enabled(bool enable);
   void request_charging_enabled();
+  void queue_command(char address, const char function[2], const char* data, size_t datasize);
+  void queue_command(char address, const char function[2], const char* data);
+  void queue_command(char address, const char function[2]);
 
  protected:
   void int_to_str(uint16_t val, char out[4]);
 
   void send_immediate(char address, const char function[2], const char* data, size_t datasize);
-  void queue_command(char address, const char function[2], const char* data, size_t datasize);
-  void queue_command(char address, const char function[2], const char* data);
-  void queue_command(char address, const char function[2]);
 
   bool parse_emh1_modbus_byte(uint8_t byte);
   GPIOPin *flow_control_pin{nullptr};
