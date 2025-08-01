@@ -42,6 +42,9 @@ void ABLeMH1::on_emh1_modbus_data(uint16_t function, const char* data) {
     case 11: { // Get l_C
       int L_c = this->str_to_int(data, 4); // PWM scaled by 0.1%, each 1% == 0.06A
       float amps = L_c*0.06;
+      if(L_c == 999) {
+        amps = 0;
+      }
       ESP_LOGW(TAG, "Current is %f", amps);
       this->publish_state_(this->current_sensor, amps);
       break;

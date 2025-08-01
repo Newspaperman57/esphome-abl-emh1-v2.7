@@ -118,7 +118,7 @@ void eMH1Modbus::set_current(float amps) {
   ESP_LOGW(TAG, "Set current: %f", amps);
   int pwm = std::round(amps * 100 / 6);
   if(pwm < 80) {
-    pwm = 999; // Charging not allowed
+    pwm = 999; // When set below 4.8 amps, set to 'charging not allowed'
   }
   char pwmstr[4];
   this->int_to_str(pwm, pwmstr);
