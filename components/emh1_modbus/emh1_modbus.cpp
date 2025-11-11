@@ -125,6 +125,21 @@ void eMH1Modbus::set_current(float amps) {
   this->queue_command(MODULE_ADDRESS, "12", pwmstr);
 }
 
+void eMH1Modbus::goto_manualmode() {
+  this->queue_command(MODULE_ADDRESS, "03");
+}
+
+void eMH1Modbus::set_default_current(float amps) {
+  ESP_LOGW(TAG, "Setting default current: %f", amps);
+  int pwm = std::round(amps * 100 / 6);
+  if(pwm < 80) {
+    pwm = 999; // When set below 4.8 amps, set to 'charging not allowed'
+  }
+  char pwmstr[4];
+  this->int_to_str(pwm, pwmstr);
+  this->queue_command(MODULE_ADDRESS, "15", pwmstr);
+}
+
 void eMH1Modbus::request_address() {
   ESP_LOGW(TAG, "Get address");
   this->queue_command(MODULE_ADDRESS, "23");

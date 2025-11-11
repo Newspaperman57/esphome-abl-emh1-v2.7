@@ -99,6 +99,22 @@ number:
         ESP_LOGD("main", "Setting current = %f", x);
         id(modbus0)->set_current(x);
 
+number:
+  - platform: template
+    name: "Current (default)"
+    id: set_default_current
+    icon: mdi:arrow-oscillating
+    min_value: 3
+    max_value: 32
+    step: 0.1
+    optimistic: true
+    # lambda: 'return id(current).state;'
+    # update_interval: 5s
+    set_action:
+      lambda: |-
+        ESP_LOGD("main", "Setting default current = %f", x);
+        id(modbus0)->set_default_current(x);
+
 switch:
   - platform: template
     name: "Enable"
@@ -123,3 +139,13 @@ button:
       - lambda: |-
           ESP_LOGD("main", "Stopping chargingsession");
           id(modbus0)->stop_charging();
+
+button:
+  - platform: template
+    name: Switch mode to MANUAL
+    id: goto_manualmode
+    on_press:
+      then:
+      - lambda: |-
+          ESP_LOGD("main", "Switching mode to MANUAL");
+          id(modbus0)->goto_manualmode();

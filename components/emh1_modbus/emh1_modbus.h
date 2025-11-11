@@ -52,6 +52,8 @@ class eMH1Modbus : public uart::UARTDevice, public Component {
   void request_current();
   void set_current(float amps);
   void request_address();
+  void goto_manualmode();
+  void set_default_current(float amps);
   void stop_charging();
   void request_max_current();
   void set_charging_enabled(bool enable);
