@@ -82,34 +82,29 @@ sensor:
       state_class: "measurement"
       id: current
 
-
 number:
   - platform: template
     name: "Current"
     id: set_current
     icon: mdi:arrow-oscillating
-    min_value: 3
+    min_value: 0
     max_value: 32
     step: 0.1
     optimistic: false
     lambda: 'return id(current).state;'
-    update_interval: 5s
+    update_interval: 1s
     set_action:
       lambda: |-
         ESP_LOGD("main", "Setting current = %f", x);
         id(modbus0)->set_current(x);
-
-number:
   - platform: template
     name: "Current (default)"
     id: set_default_current
     icon: mdi:arrow-oscillating
-    min_value: 3
+    min_value: 6
     max_value: 32
     step: 0.1
     optimistic: true
-    # lambda: 'return id(current).state;'
-    # update_interval: 5s
     set_action:
       lambda: |-
         ESP_LOGD("main", "Setting default current = %f", x);
@@ -120,25 +115,16 @@ switch:
     name: "Enable"
     id: enable_switch
     icon: "mdi:power"
-    lambda: 'return id(charging_enabled).state;'
+    lambda: 'return !id(charging_enabled).state;'
     turn_off_action:
       - lambda: |-
           ESP_LOGD("main", "Disabling charging");
+          id(modbus0)->stop_charging();
           id(modbus0)->set_charging_enabled(false);
     turn_on_action:
       - lambda: |-
           ESP_LOGD("main", "Enabling charging");
           id(modbus0)->set_charging_enabled(true);
-
-button:
-  - platform: template
-    name: Stop charging
-    id: stop_charging
-    on_press:
-      then:
-      - lambda: |-
-          ESP_LOGD("main", "Stopping chargingsession");
-          id(modbus0)->stop_charging();
 
 button:
   - platform: template
